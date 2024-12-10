@@ -4,23 +4,34 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db" // SQLite-database
+  url      = "file:./dev.db"
 }
 
-model Member {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  name      String
-  isAdmin   Boolean  @default(false)
-  createdAt DateTime @default(now())
-  profile   Profile?  // 1-to-1 relation to Profile
+model User {
+  id               Int       @id @default(autoincrement())
+  email            String    @unique
+  password         String
+  name             String?
+  role             String    @default("user")
+  isActive         Boolean   @default(true)
+  resetToken       String?   // Token for password reset (nullable)
+  resetTokenExpiry DateTime? // Expiration date for the reset token (nullable)
+  createdAt        DateTime  @default(now())
+  lastLogin        DateTime? // Timestamp for the last login (nullable)
+
+  profile  Profile?  // One-to-one relation with Profile model
+
+  @@index([email, name]) // Index on email and name for faster queries
+  @@index([role]) // Index on role for faster queries
 }
 
 model Profile {
-  id        Int      @id @default(autoincrement())
-  bio       String?
-  avatar    String?
-  memberId  Int      @unique
-  member    Member   @relation(fields: [memberId], references: [id])
+  id         Int     @id @default(autoincrement())
+  bio        String?
+  avatar     String? @default("default-avatar.png")
+  userId     Int     @unique
+  address    String?
+  phoneNumber String?
+
+  user       User    @relation(fields: [userId], references: [id]) // One-to-one relation with User model
 }
