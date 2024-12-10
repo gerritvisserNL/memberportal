@@ -13,3 +13,4 @@ node_modules/
 # scripts
 createAdmin.js
 createDemoUser.js
+testScriptEmail.js
