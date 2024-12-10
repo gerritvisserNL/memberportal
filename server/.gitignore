@@ -11,6 +11,4 @@ node_modules/
 *.sqlite
 
 # scripts
-createAdmin.js
-createDemoUser.js
-testScriptEmail.js
+scripts
